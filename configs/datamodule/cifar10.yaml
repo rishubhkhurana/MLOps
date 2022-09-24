@@ -1,0 +1,6 @@
+_target_: src.datamodules.cifar10_datamodule.CIFAR10DataModule
+data_dir: ${paths.data_dir}
+batch_size: 64
+train_val_test_split: [40_000, 10_000, 10_000]
+num_workers: 0
+pin_memory: False

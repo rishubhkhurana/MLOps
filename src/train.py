@@ -6,6 +6,8 @@ root = pyrootutils.setup_root(
     pythonpath=True,
     dotenv=True,
 )
+import sys
+sys.path.append(root)
 
 # ------------------------------------------------------------------------------------ #
 # `pyrootutils.setup_root(...)` is an optional line at the top of each entry file
