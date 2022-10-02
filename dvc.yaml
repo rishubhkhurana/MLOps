@@ -1,0 +1,5 @@
+stages:
+  train-cifar:
+    cmd: python src/train.py experiment=cifar
+    deps:
+      - data/
