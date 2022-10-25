@@ -4,7 +4,7 @@ import torch
 from pytorch_lightning import LightningModule
 from torchmetrics import MaxMetric, MeanMetric
 from torchmetrics.classification.accuracy import Accuracy
-
+import torchvision.transforms as T
 
 class CIFAR10LitModule(LightningModule):
     """Example of LightningModule for MNIST classification.
@@ -32,7 +32,6 @@ class CIFAR10LitModule(LightningModule):
         # this line allows to access init params with 'self.hparams' attribute
         # also ensures init params will be stored in ckpt
         self.save_hyperparameters(logger=False, ignore=["net"])
-        LOGGER.log_hyperparams(self.hparams)
 
         self.net = net
 
@@ -52,8 +51,18 @@ class CIFAR10LitModule(LightningModule):
         # for tracking best so far validation accuracy
         self.val_acc_best = MaxMetric()
 
+        self.predict_transform = T.Normalize((0.4914, 0.4822, 0.4465), (0.247, 0.243, 0.261))
+
     def forward(self, x: torch.Tensor):
         return self.net(x)
+    
+    @torch.jit.export
+    def forward_jit(self, x: torch.Tensor):
+        with torch.no_grad():
+            img = self.predict_transform(x)
+            logits = self(img)
+            probs = torch.softmax(logits, dim = -1)
+        return probs
 
     def on_train_start(self):
         # by default lightning executes validation step sanity checks before training starts,

@@ -37,7 +37,8 @@ sys.path.append(root)
 
 from typing import List, Optional, Tuple
 
-import hydra
+import hydra 
+import torch
 import pytorch_lightning as pl
 from omegaconf import DictConfig
 from pytorch_lightning import Callback, LightningDataModule, LightningModule, Trainer
@@ -114,6 +115,11 @@ def train(cfg: DictConfig) -> Tuple[dict, dict]:
 
     # merge train and test metrics
     metric_dict = {**train_metrics, **test_metrics}
+
+    if cfg.get('save_mode') == 'scripted':
+        model.eval()
+        script = model.to_torchscript(file_path="model.pt", method="script")
+        torch.jit.save(script, "./model.pt")
 
     return metric_dict, object_dict
 

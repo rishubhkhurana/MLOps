@@ -18,8 +18,8 @@ tags: ["cifar10", "cifarnet"]
 seed: 12345
 
 trainer:
-  min_epochs: 10
-  max_epochs: 10
+  min_epochs: 1
+  max_epochs: 1
   gradient_clip_val: 0.5
 
 model:
@@ -41,6 +41,8 @@ logger:
 callbacks:
   model_checkpoint:
     save_on_train_epoch_end: true
+  
+
 
 
 
